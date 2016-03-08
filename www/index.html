@@ -22,83 +22,15 @@
 <script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
 <script type="text/javascript" charset="utf-8" src="jquery_1.5.2.min.js"></script>
 <script type="text/javascript" src="PushNotification.js"></script>
-
-<html>
-<head>
-    <meta charset="utf-8"/>
-    <meta name="format-detection" content="telephone=no"/>
-    <meta name="msapplication-tap-highlight" content="no"/>
-    <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
-    <meta name="viewport"
-          content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi"/>
-    <link rel="stylesheet" href="css/jquery.mobile.icons.min.css"/>
-    <link rel="stylesheet" href="css/jquery.mobile.structure-1.4.5.min.css"/>
-    <link rel="stylesheet" href="css/Baltimore.min.css"/>
-    <link rel="stylesheet" href="css/costum-css-app.css">
-    <title>Demo Hotel</title>
-</head>
-<body>
-
-<!--Home-->
-<div data-role="page" id="home">
-    <div data-role="header" data-theme="b">
-        <h1>Hotel</h1>
-        <a href="#popupconfig" data-rel="popup" data-position-to="window" class="" data-transition="pop"
-           data-icon="gear"></a>
-    </div><!-- /header -->
-
-    <div data-role="content" id="content-home">
-        <div id="logo_image">
-            <img src="img/logo.png" alt="Image Header">
-        </div>
-        <p id="login-test">--</p>
-        <div id="loginbtnContainer">
-            <a href="login.html" data-role="button"
-               data-transition="pop">
-                Iniciar Sesión</a>
-        </div>
-        <div id="logoutbtnContainer">
-            <a href="#popupconfig" id="logoutBtn" data-role="button">
-                cerrar sesión
-            </a>
-        </div>
-
-        <div data-role="popup" id="popupconfig" class="ui-btn-corner-all">
-            <a href="insert.html" data-role="button">Insertar registro</a>
-        </div>
-
-    </div><!-- /content -->
-
-    <div data-role="footer" data-position="fixed">
-        <div data-role="navbar" data-iconpos="bottom">
-            <ul>
-                <li><a href="#home" data-icon="home" data-transition="flow">Inicio</a></li>
-                <li><a href="#ofertas" data-icon="calendar" data-transition="flow">Ofertas</a></li>
-                <li><a href="#paquetes" data-icon="info">Paquetes</a></li>
-            </ul>
-        </div>
-    </div><!-- /footer -->
-</div><!-- /page -->
-
-
-<!--Ofertas-->
-<div data-role="page" id="ofertas">
-    <div data-role="header" data-theme="b">
-        <h1>Ofertas</h1>
-        <a href="#popupconfig" data-rel="popup" data-position-to="window" class="" data-transition="pop"
-           data-icon="gear"></a>
-    </div><!-- /header -->
-
-    <div data-role="content" id="content-ofertas">
 <script type="text/javascript">
     var pushNotification;
 
     function onDeviceReady() {
-        $("#app-status-ul").append('<li>deviceready event received</li>');
+        $("#app-status-ul").append('');
 
         document.addEventListener("backbutton", function(e)
         {
-            $("#app-status-ul").append('<li>backbutton event received</li>');
+            $("#app-status-ul").append('');
 
             if( $("#home").length > 0)
             {
@@ -225,7 +157,73 @@
     document.addEventListener('deviceready', onDeviceReady, true);
 
 </script>
-	
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="msapplication-tap-highlight" content="no"/>
+    <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+    <meta name="viewport"
+          content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi"/>
+    <link rel="stylesheet" href="css/jquery.mobile.icons.min.css"/>
+    <link rel="stylesheet" href="css/jquery.mobile.structure-1.4.5.min.css"/>
+    <link rel="stylesheet" href="css/Baltimore.min.css"/>
+    <link rel="stylesheet" href="css/costum-css-app.css">
+    <title>Demo Hotel</title>
+</head>
+<body>
+
+<!--Home-->
+<div data-role="page" id="home">
+    <div data-role="header" data-theme="b">
+        <h1>Hotel</h1>
+        <a href="#popupconfig" data-rel="popup" data-position-to="window" class="" data-transition="pop"
+           data-icon="gear"></a>
+    </div><!-- /header -->
+
+    <div data-role="content" id="content-home">
+        <div id="logo_image">
+            <img src="img/logo.png" alt="Image Header">
+        </div>
+        <p id="login-test">--</p>
+        <div id="loginbtnContainer">
+            <a href="login.html" data-role="button"
+               data-transition="pop">
+                Iniciar Sesión</a>
+        </div>
+        <div id="logoutbtnContainer">
+            <a href="#popupconfig" id="logoutBtn" data-role="button">
+                cerrar sesión
+            </a>
+        </div>
+
+        <div data-role="popup" id="popupconfig" class="ui-btn-corner-all">
+            <a href="insert.html" data-role="button">Insertar registro</a>
+        </div>
+
+    </div><!-- /content -->
+
+    <div data-role="footer" data-position="fixed">
+        <div data-role="navbar" data-iconpos="bottom">
+            <ul>
+                <li><a href="#home" data-icon="home" data-transition="flow">Inicio</a></li>
+                <li><a href="#ofertas" data-icon="calendar" data-transition="flow">Ofertas</a></li>
+                <li><a href="#paquetes" data-icon="info">Paquetes</a></li>
+            </ul>
+        </div>
+    </div><!-- /footer -->
+</div><!-- /page -->
+
+
+<!--Ofertas-->
+<div data-role="page" id="ofertas">
+    <div data-role="header" data-theme="b">
+        <h1>Ofertas</h1>
+        <a href="#popupconfig" data-rel="popup" data-position-to="window" class="" data-transition="pop"
+           data-icon="gear"></a>
+    </div><!-- /header -->
+
+    <div data-role="content" id="content-ofertas">	
 <div id="phongapTest1"></div>
         <ul data-role="listview" id="paquetesList1" data-inset="true">
 
