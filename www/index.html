@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<!--
+    Copyright (c) 2012-2014 Adobe Systems Incorporated. All rights reserved.
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
+<script type="text/javascript" charset="utf-8" src="jquery_1.5.2.min.js"></script>
+<script type="text/javascript" src="PushNotification.js"></script>
+
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="msapplication-tap-highlight" content="no"/>
+    <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+    <meta name="viewport"
+          content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi"/>
+    <link rel="stylesheet" href="css/jquery.mobile.icons.min.css"/>
+    <link rel="stylesheet" href="css/jquery.mobile.structure-1.4.5.min.css"/>
+    <link rel="stylesheet" href="css/Baltimore.min.css"/>
+    <link rel="stylesheet" href="css/costum-css-app.css">
+    <title>Demo Hotel</title>
+</head>
+<body>
+
+<!--Home-->
+<div data-role="page" id="home">
+    <div data-role="header" data-theme="b">
+        <h1>Hotel</h1>
+        <a href="#popupconfig" data-rel="popup" data-position-to="window" class="" data-transition="pop"
+           data-icon="gear"></a>
+    </div><!-- /header -->
+
+    <div data-role="content" id="content-home">
+        <div id="logo_image">
+            <img src="img/logo.png" alt="Image Header">
+        </div>
+        <p id="login-test">--</p>
+        <div id="loginbtnContainer">
+            <a href="login.html" data-role="button"
+               data-transition="pop">
+                Iniciar Sesión</a>
+        </div>
+        <div id="logoutbtnContainer">
+            <a href="#popupconfig" id="logoutBtn" data-role="button">
+                cerrar sesión
+            </a>
+        </div>
+
+        <div data-role="popup" id="popupconfig" class="ui-btn-corner-all">
+            <a href="insert.html" data-role="button">Insertar registro</a>
+        </div>
+
+    </div><!-- /content -->
+
+    <div data-role="footer" data-position="fixed">
+        <div data-role="navbar" data-iconpos="bottom">
+            <ul>
+                <li><a href="#home" data-icon="home" data-transition="flow">Inicio</a></li>
+                <li><a href="#ofertas" data-icon="calendar" data-transition="flow">Ofertas</a></li>
+                <li><a href="#paquetes" data-icon="info">Paquetes</a></li>
+            </ul>
+        </div>
+    </div><!-- /footer -->
+</div><!-- /page -->
+
+
+<!--Ofertas-->
+<div data-role="page" id="ofertas">
+    <div data-role="header" data-theme="b">
+        <h1>Ofertas</h1>
+        <a href="#popupconfig" data-rel="popup" data-position-to="window" class="" data-transition="pop"
+           data-icon="gear"></a>
+    </div><!-- /header -->
+
+    <div data-role="content" id="content-ofertas">
+<script type="text/javascript">
+    var pushNotification;
+
+    function onDeviceReady() {
+        $("#app-status-ul").append('<li>deviceready event received</li>');
+
+        document.addEventListener("backbutton", function(e)
+        {
+            $("#app-status-ul").append('<li>backbutton event received</li>');
+
+            if( $("#home").length > 0)
+            {
+                // call this to get a new token each time. don't call it to reuse existing token.
+                //pushNotification.unregister(successHandler, errorHandler);
+                e.preventDefault();
+                navigator.app.exitApp();
+            }
+            else
+            {
+                navigator.app.backHistory();
+            }
+        }, false);
+
+        try
+        {
+            pushNotification = window.plugins.pushNotification;
+            $("#app-status-ul").append('<li>Ingreso desde un ' + device.platform + '</li>');
+            if (device.platform == 'android' || device.platform == 'Android' ||
+                    device.platform == 'amazon-fireos' ) {
+                pushNotification.register(successHandler, errorHandler, {"senderID":"469201422848","ecb":"onNotification"});		// required!
+            } else {
+                pushNotification.register(tokenHandler, errorHandler, {"badge":"true","sound":"true","alert":"true","ecb":"onNotificationAPN"});	// required!
+            }
+        }
+        catch(err)
+        {
+            txt="Error.\n\n";
+            txt+="Descri��o do erro: " + err.message + "\n\n";
+            alert(txt);
+        }
+    }
+
+    // handle APNS notifications for iOS
+    function onNotificationAPN(e) {
+        if (e.alert) {
+            $("#app-status-ul").append('<li>push-notifica��o: ' + e.alert + '</li>');
+            // showing an alert also requires the org.apache.cordova.dialogs plugin
+            navigator.notification.alert(e.alert);
+        }
+
+        if (e.sound) {
+            // playing a sound also requires the org.apache.cordova.media plugin
+            var snd = new Media(e.sound);
+            snd.play();
+        }
+
+        if (e.badge) {
+            pushNotification.setApplicationIconBadgeNumber(successHandler, e.badge);
+        }
+    }
+
+    // handle GCM notifications for Android
+    function onNotification(e) {
+        $("#app-status-ul").append('<li>EVENTO -> RECEBIDO:' + e.event + '</li>');
+
+        switch( e.event )
+        {
+            case 'registered':
+                if ( e.regid.length > 0 )
+                {
+                    $("#app-status-ul").append('<li>REGISTRANDO -> REGID: \n\n' + e.regid + "\n\n</li>");
+                    // Your GCM push server needs to know the regID before it can push to this device
+                    // here is where you might want to send it the regID for later use.
+                    console.log("regID = " + e.regid);
+                }
+                break;
+
+            case 'message':
+                // if this flag is set, this notification happened while we were in the foreground.
+                // you might want to play a sound to get the user's attention, throw up a dialog, etc.
+                if (e.foreground)
+                {
+                    $("#app-status-ul").append('<li>--NOTIFICA��ES IN LINE--' + '</li>');
+
+                    // on Android soundname is outside the payload.
+                    // On Amazon FireOS all custom attributes are contained within payload
+                    var soundfile = e.soundname || e.payload.sound;
+                    // if the notification contains a soundname, play it.
+                    // playing a sound also requires the org.apache.cordova.media plugin
+                    var my_media = new Media("/android_asset/www/"+ soundfile);
+
+                    my_media.play();
+                }
+                else
+                {	// otherwise we were launched because the user touched a notification in the notification tray.
+                    if (e.coldstart)
+                        $("#app-status-ul").append('<li>--NOTIFICA��ES RECEBIDAS--' + '</li>');
+                    else
+                        $("#app-status-ul").append('<li>--BACKGROUND NOTIFICATION--' + '</li>');
+                }
+
+                $("#app-status-ul").append('<li>MENSAGEM -> MSG: ' + e.payload.message + '</li>');
+                //android only
+                $("#app-status-ul").append('<li>MENSAGEM -> MSGCNT: ' + e.payload.msgcnt + '</li>');
+                //amazon-fireos only
+                $("#app-status-ul").append('<li>MENSAGEM -> TIMESTAMP: ' + e.payload.timeStamp + '</li>');
+                break;
+
+            case 'error':
+                $("#app-status-ul").append('<li>ERRO -> MSG:' + e.msg + '</li>');
+                break;
+
+            default:
+                $("#app-status-ul").append('<li>EVENTO -> Unknown, an event was received and we do not know what it is</li>');
+                break;
+        }
+    }
+
+    function tokenHandler (result) {
+        $("#app-status-ul").append('<li>token: '+ result +'</li>');
+        // Your iOS push server needs to know the token before it can push to this device
+        // here is where you might want to send it the token for later use.
+    }
+
+    function successHandler (result) {
+        $("#app-status-ul").append('<li>sucesso:'+ result +'</li>');
+    }
+
+    function errorHandler (error) {
+        $("#app-status-ul").append('<li>erro:'+ error +'</li>');
+    }
+
+    document.addEventListener('deviceready', onDeviceReady, true);
+
+</script>
+	
+<div id="phongapTest1"></div>
+        <ul data-role="listview" id="paquetesList1" data-inset="true">
+
+        </ul>
+	
+
+    </div><!-- /content -->
+
+    <div data-role="footer" data-position="fixed">
+        <div data-role="navbar" data-iconpos="bottom">
+            <ul>
+                <li><a href="#home" data-icon="home" data-transition="flow">Inicio</a></li>
+                <li><a href="#ofertas" data-icon="calendar" data-transition="flow">Ofertas</a></li>
+                <li><a href="#paquetes" data-icon="info">Paquetes</a></li>
+            </ul>
+        </div>
+    </div><!-- /footer -->
+</div><!-- /page -->
+
+
+<!--Paquetes-->
+<div data-role="page" id="paquetes">
+    <div data-role="header" data-theme="b">
+        <h1>Hotel</h1>
+        <a href="#popupconfig" data-rel="popup" data-position-to="window" class="" data-transition="pop"
+           data-icon="gear"></a>
+    </div><!-- /header -->
+
+    <div data-role="content" id="content-paquetes">
+        <div id="phongapTest"></div>
+        <ul data-role="listview" id="paquetesList" data-inset="true">
+
+        </ul>
+
+    </div><!-- /content -->
+
+    <div data-role="footer" data-position="fixed">
+        <div data-role="navbar" data-iconpos="bottom">
+            <ul>
+                <li><a href="#home" data-icon="home" data-transition="flow">Inicio</a></li>
+                <li><a href="#ofertas" data-icon="calendar" data-transition="flow">Ofertas</a></li>
+                <li><a href="#paquetes" data-icon="info">Paquetes</a></li>
+            </ul>
+        </div>
+    </div><!-- /footer -->
+</div><!-- /page -->
+
+<script src="js/jquery-1.11.3.min.js"></script>
+<script src="js/jquery.mobile-1.4.5.min.js"></script>
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript">
+    app.initialize();
+</script>
+</body>
+</html>
